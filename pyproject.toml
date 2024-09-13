@@ -1,0 +1,23 @@
+[project]
+name = "covid"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+  "matplotlib>=3.9.2",
+  "numpyro>=0.15.2",
+  "pykalman>=0.9.7",
+  "pymc>=5.16.2",
+  "pyqt6>=6.7.1",
+  "pyro-ppl>=1.9.1",
+  "scipy>=1.14.1",
+]
+
+[tool.uv]
+dev-dependencies = ["pytest>=8.3.3"]
+
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
