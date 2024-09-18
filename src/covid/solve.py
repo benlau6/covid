@@ -6,6 +6,7 @@ from pykalman import KalmanFilter
 
 from covid.data import get_data_model
 from covid.model import exp_model, get_r_naught_model, logistic_model
+from covid.plot import format_date, plot_ticks, plot_title, plot_xlabel, plot_ylabel
 from covid.result import load_trace, plot_credible_interval, save_trace
 
 # uses constrained_layout to adjust the plot layout for trace plot
@@ -53,7 +54,7 @@ fitting_params = {
 }
 
 if __name__ == "__main__":
-    update = True
+    update = False
     num_days = 60
     since_val = 150
     confirmed, days, dates = get_data_model(num_days=num_days, since_val=since_val)
@@ -88,28 +89,38 @@ if __name__ == "__main__":
         plt.savefig("output/ppc.png")
 
     az.plot_trace(trace)
+    # trace plot contains a lot of information, while the details are not important
+    # so uses the png format with default 100 dpi
+    plot_title("Trace Plot")
     plt.savefig("output/trace.png")
     az.plot_energy(trace)
     plt.savefig("output/energy.png")
 
     # plot reproduction rate
-    fig, ax = plt.subplots(figsize=(12, 6))
+    fig, ax = plt.subplots(figsize=(21, 9))
     cmap = plt.get_cmap("Reds")
     samples = trace.posterior.rt.median(dim=["chain", "draw"])
     # NOTE: matplotlib somehow does not support xarray dates
     # it is needed to convert it to numpy array
     ax.plot(dates, samples, color=cmap(1.0))
-    ax.set(xlabel="date", ylabel="$R_e(t)$")
+    # ax.set(xlabel="date", ylabel="$R_e(t)$", fontsize=16)
     ax.axhline(1.0, c="k", lw=1, linestyle="--")
-    myFmt = mdates.DateFormatter("%Y-%m-%d")
-    ax.xaxis.set_major_formatter(myFmt)
+    format_date()
 
     # plot 95% credible interval
     samples = trace.posterior.rt.median(dim=["chain"]).T
     plot_credible_interval(samples, dates, alpha=0.05, color=cmap(0.1))
 
-    plt.savefig("output/rt.png")
-    az.plot_ts(post_pred, y="obs")
-    plt.gca().xaxis.set_major_formatter(myFmt)
+    plot_title("Effective Reproduction Rate")
+    plot_ylabel("$R_e(t)$")
+    plot_xlabel("date")
+    plot_ticks()
+    plt.savefig("output/rt.svg")
 
-    plt.savefig("output/ts.png")
+    az.plot_ts(post_pred, y="obs", figsize=(21, 9), textsize=16)
+    plot_title("Daily New Cases")
+    plot_ylabel("new cases")
+    plot_xlabel("date")
+    plot_ticks()
+    format_date()
+    plt.savefig("output/ts_new_cases.svg")
