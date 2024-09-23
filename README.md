@@ -4,6 +4,14 @@ This project uses Bayesian methods and probabilistic programming to analyze the 
 
 The main idea is based on rtlive and k-sys/covid-19 by Thomas Wiecki and Kevin Systrom. The model is a State Space Model with Gaussian random walk prior, implemented in PyMC.
 
+A few plots are generated to visualize the results. Note that time series plots are mostly in aspect ratio 21:9 for better visualization.<sup>[\[1\]](http://vis.stanford.edu/files/2006-Banking-InfoVis.pdf)</sup><sup>[\[2\]](http://vis.stanford.edu/files/2012-SlopeComparison-InfoVis.pdf)</sup>
+
+![Effective Production Rate](./output/rt.svg)
+
+![Daily New Cases](./output/ts_new_cases.svg)
+
+![trace plot](./output/trace.png)
+
 ## References
 
 ### Implementations and Tutorials
